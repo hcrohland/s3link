@@ -182,7 +182,7 @@ extern "C" ssize_t usb_open(const int sock, cdc_acm_data_callback_t handle_rx)
                 vcp->close();
                 return len;
             }
-            ESP_LOG_BUFFER_HEXDUMP("Received", rx_buffer, len, ESP_LOG_INFO);
+            ESP_LOG_BUFFER_CHAR_LEVEL("Received", rx_buffer, len, ESP_LOG_INFO);
 
             esp_err_t err_rc = vcp->tx_blocking(rx_buffer, len);
             if (err_rc != ESP_OK)

@@ -47,7 +47,7 @@ static const char *TAG = "s3link";
 static bool handle_rx(const uint8_t *data, const size_t data_len, const int *sock)
 {
     int to_write = data_len;
-    ESP_LOG_BUFFER_HEXDUMP("Sending", data, data_len, ESP_LOG_INFO);
+    ESP_LOG_BUFFER_CHAR_LEVEL("Sending", data, data_len, ESP_LOG_INFO);
     while (to_write > 0)
     {
         int written = send(*sock, data + (data_len - to_write), to_write, 0);
