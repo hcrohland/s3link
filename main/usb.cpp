@@ -24,7 +24,7 @@
 #include "lwip/sys.h"
 #include <lwip/netdb.h>
 
-// #include "usb.h"
+#include "usb.h"
 
 using namespace esp_usb;
 

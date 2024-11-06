@@ -44,13 +44,13 @@ static const char *TAG = "s3link";
  *   true:  We have processed the received data
  *   false: We expect more data
  */
-static bool handle_rx(const uint8_t *data, const size_t data_len, const int *sock)
+static bool handle_rx(const uint8_t *data, const size_t data_len, void *sock)
 {
     int to_write = data_len;
     ESP_LOG_BUFFER_CHAR_LEVEL("Sending", data, data_len, ESP_LOG_INFO);
     while (to_write > 0)
     {
-        int written = send(*sock, data + (data_len - to_write), to_write, 0);
+        int written = send(*(int*)sock, data + (data_len - to_write), to_write, 0);
         if (written < 0)
         {
             ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
