@@ -163,7 +163,7 @@ extern "C" ssize_t usb_open(const int sock, cdc_acm_data_callback_t handle_rx)
         */
 
         int len;
-        uint8_t rx_buffer[128];
+        uint8_t rx_buffer[512];
 
         do
         {
