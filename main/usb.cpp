@@ -167,28 +167,50 @@ extern "C" ssize_t usb_open(const int sock, cdc_acm_data_callback_t handle_rx)
 
         do
         {
-            len = recv(sock, rx_buffer, sizeof(rx_buffer), 0);
-            if (len <= 0)
-            {
-                if (len < 0)
-                {
-                    ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
-                }
-                else
-                {
-                    ESP_LOGW(TAG, "Socket closed");
-                }
-                ESP_LOGI(TAG, "Closing usb");
-                vcp->close();
-                return len;
-            }
-            ESP_LOG_BUFFER_CHAR_LEVEL("Received", rx_buffer, len, ESP_LOG_INFO);
+            fd_set read;
+            FD_ZERO(&read);
+            FD_SET(sock, &read);
+            struct timeval timeout;
+            timeout.tv_sec = 1;
+            timeout.tv_usec = 0;
 
-            esp_err_t err_rc = vcp->tx_blocking(rx_buffer, len);
-            if (err_rc != ESP_OK)
+            if (select(sock + 1, &read, NULL, NULL, &timeout) > 0)
             {
-                ESP_LOGE(TAG, "Error sending to USB: errno %d", errno);
-                break;
+                len = recv(sock, rx_buffer, sizeof(rx_buffer), 0);
+                if (len <= 0)
+                {
+                    if (len < 0)
+                    {
+                        ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+                    }
+                    else
+                    {
+                        ESP_LOGW(TAG, "Socket closed");
+                    }
+                    ESP_LOGI(TAG, "Closing usb");
+                    vcp->close();
+                    return len;
+                }
+                ESP_LOG_BUFFER_CHAR_LEVEL("Received", rx_buffer, len, ESP_LOG_INFO);
+
+                esp_err_t err_rc = vcp->tx_blocking(rx_buffer, len);
+                if (err_rc != ESP_OK)
+                {
+                    ESP_LOGE(TAG, "Error sending to USB: %s", esp_err_to_name(err_rc));
+                    break;
+                } 
+            }
+            else
+            {
+                // check usb connection
+                esp_err_t err_rc = vcp->set_control_line_state(false, true);
+                if (err_rc != ESP_OK)
+                {
+                    ESP_LOGE(TAG, "Error testing USB: %s", esp_err_to_name(err_rc));
+                    break;
+                } 
+                // continue loop
+                len = 1;
             }
         } while (len > 0);
 
