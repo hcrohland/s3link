@@ -1,31 +1,19 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- |
+| Supported Targets | ESP32-S2 | ESP32-S3 |
+| ----------------- | -------- | -------- |
 
 
-# TCP Server example
+# s3link
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+A usb serial to wifi bridge based on the esp tcp server and usb host examples
 
-The application creates a TCP socket with the specified port number and waits for a connection request from the client. After accepting a request from the client, connection between server and client is established and the application waits for some data to be received from the client. Received data are printed as ASCII text and retransmitted back to the client.
+## How to use s3link
 
-## How to use example
+My use case is to connect my 3d printer over Wifi with octoprint on a remote host
 
-In order to create TCP client that communicates with TCP server example, choose one of the following options.
-
-There are many host-side tools which can be used to interact with the UDP/TCP server/client.
-One command line tool is [netcat](http://netcat.sourceforge.net) which can send and receive many kinds of packets.
-Note: please replace `192.168.0.167 3333` with desired IPV4/IPV6 address (displayed in monitor console) and port number in the following command.
-
-Ref to the [upper level README](../README.md#host-tools) for more information.
-
-### TCP client using netcat
-```
-nc 192.168.0.167 3333
-```
 
 ## Hardware Required
 
-This example can be run on any commonly available ESP32 development board.
+This example can be run on ESP32-S3 and probably -S2 development board.
 
 ## Configure the project
 
@@ -58,8 +46,3 @@ idf.py -p PORT flash monitor
 (To exit the serial monitor, type ``Ctrl-]``.)
 
 See the Getting Started Guide for full steps to configure and use ESP-IDF to build projects.
-
-
-## Troubleshooting
-
-Start server first, to receive data sent from the client (application).
